@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../css/estilos.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="../css/css2" rel="stylesheet">
+    <title>Personajes - Dragon Ball</title>
+    <style>
+        /* Botón de inicio */
+        #startButton {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 20px 40px;
+            font-size: 24px;
+            background: #ff0000;
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            z-index: 9999;
+        }
+        #startButton:hover {
+            background: #cc0000;
+        }
+
+        /* Overlay de video */
+        .background-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: -1;
+        }
+
+        /* Video de fondo */
+        .video-section video {
+            position: fixed;
+            top: 0; 
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+            filter: brightness(0.35);
+        }
+
+        /* Botón de control de video de fondo */
+        #bgControlButton {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            font-size: 16px;
+            background: #4c6ef5;
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            z-index: 9999;
+            transition: 0.3s;
+        }
+        #bgControlButton:hover {
+            background: #364fc7;
+        }
+
+        /* Menú con botones del mismo tamaño */
+        .main-nav ul {
+            display: flex;
+            gap: 10px;
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .main-nav li {
+            flex: 1; /* todos los botones del mismo ancho */
+        }
+
+        .main-nav a {
+            display: block;
+            text-align: center;
+            padding: 10px 15px;
+            background-color: #4c6ef5;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: 0.3s;
+            font-weight: 500;
+        }
+
+        .main-nav a:hover {
+            background-color: #364fc7;
+        }
+
+        /* Grid animado de personajes */
+        .characters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .character-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 15px;
+            cursor: pointer;
+        }
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%;
+            overflow: hidden;
+        }
+        .video-wrapper video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+            display: block;
+        }
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            text-align: center;
+            padding: 20px;
+        }
+        .character-card:hover video {
+            transform: scale(1.1);
+        }
+        .character-card:hover .video-overlay {
+            opacity: 1;
+        }
+        .video-overlay h3 {
+            margin-bottom: 10px;
+            font-size: 22px;
+        }
+        .video-overlay p {
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body class="characters-page">
+
+    <!-- Overlay para oscurecer el video -->
+    <div class="background-overlay"></div>
+
+    <!-- Botón de inicio -->
+    <button id="startButton">▶ ¿Iniciar nostalgia?</button>
+
+    <!-- Botón para controlar video de fondo -->
+    <button id="bgControlButton">⏯ Reproducir desde Inicio</button>
+
+    <!-- Header -->
+    <header class="main-header">
+        <div class="header-content">
+            <div class="logo-section">
+                <h1 class="main-title glitch" data-text="BLACK OPS ZOMBIES">Dragon Ball</h1>
+                <p class="header-subtitle">El protagonista de la serie</p>
+            </div>
+            <nav class="main-nav">
+                <ul>
+                    <li><a href="home.html">&#127968; INICIO</a></li>
+                    <li><a href="characters.html">&#128100; PERSONAJES</a></li>
+                    <li><a href="login.html">&#128274; Cerrar Sesión</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Video principal de fondo -->
+    <section class="video-section">
+        <div class="video-container">
+            <video id="missionVideo" autoplay muted loop poster="100">
+                <source src="video/piccolo.mp4" type="video/mp4">       
+                Tu navegador no soporta la reproducción de video.
+            </video>
+
+            <!-- Reproductor de audio de fondo -->
+            <audio id="backgroundMusic" loop>
+                <source src="audio/Shi%20No%20Numa%20Song%20-%20The%20One%20-%20Elena%20Siegman%20-%20Lyrics%20%5BOfficial%5D.mp3" type="audio/mpeg">
+                Tu navegador no soporta audio HTML5.
+            </audio>
+        </div>
+    </section>
+
+    <!-- Sección de Personajes con 4 videos animados -->
+    <section class="characters-section">
+        <div class="container">
+            <h2>Personajes de Dragon Ball</h2>
+            <h1>(Mueve el cursor sobre los el video y descubre lo que los ojos no puden ver)</h1>
+            <div class="characters-grid">
+
+                <!-- Goku -->
+                <div class="character-card">
+                    <div class="video-wrapper">
+                        <video src="video/goku 1.mp4" poster="images/goku.jpg" loop muted></video>
+                        <div class="video-overlay">
+                            <h3>Goku</h3>
+                            <p>Protagonista Saiyajin, siempre busca superar sus límites y proteger la Tierra.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Gohan -->
+                <div class="character-card">
+                    <div class="video-wrapper">
+                        <video src="video/gohan.mp4" poster="images/gohan.jpg" loop muted></video>
+                        <div class="video-overlay">
+                            <h3>Gohan</h3>
+                            <p>Hijo de Goku, combina fuerza y inteligencia, y siempre lucha por la justicia.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Vegeta -->
+                <div class="character-card">
+                    <div class="video-wrapper">
+                        <video src="video/vegeta.mp4" poster="images/vegeta.jpg" loop muted></video>
+                        <div class="video-overlay">
+                            <h3>Vegeta</h3>
+                            <p>Príncipe Saiyajin, rival de Goku, orgulloso y extremadamente poderoso.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Piccolo -->
+                <div class="character-card">
+                    <div class="video-wrapper">
+                        <video src="video/piccolo.mp4" poster="images/piccolo.jpg" loop muted></video>
+                        <div class="video-overlay">
+                            <h3>Piccolo</h3>
+                            <p>Guerrero Namekiano, estratega y mentor de Gohan, siempre protege a la Tierra.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+    
+    </footer>
+
+    <!-- Scripts -->
+    <script src="../js/firebase-app.js"></script>
+    <script src="../js/firebase-auth.js"></script>
+    <script src="../js/app.js"></script>
+    <script src="../js/auth.js"></script>
+
+    <script>
+        // Video y audio principal
+        const video = document.getElementById('missionVideo');
+        const audio = document.getElementById('backgroundMusic');
+        const startButton = document.getElementById('startButton');
+
+        startButton.addEventListener('click', () => {
+            video.muted = false;
+            video.play().catch(e => console.log("Error al reproducir video:", e));
+            audio.play().catch(e => console.log("Error al reproducir audio:", e));
+            startButton.style.display = 'none';
+        });
+
+        // Botón de control de video de fondo desde inicio
+        const bgControlButton = document.getElementById('bgControlButton');
+        bgControlButton.addEventListener('click', () => {
+            video.currentTime = 0; // reinicia desde inicio
+            if (video.paused) {
+                video.play().catch(e => console.log("Error al reproducir video:", e));
+                bgControlButton.textContent = '⏸ Pausar Fondo';
+            } else {
+                video.pause();
+                bgControlButton.textContent = '▶ Reproducir desde Inicio';
+            }
+        });
+    </script>
+</body>
+</html>
